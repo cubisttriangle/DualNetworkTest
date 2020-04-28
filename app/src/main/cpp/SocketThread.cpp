@@ -191,6 +191,11 @@ bool SocketThread::SetupSocket( Socket &s, EndPoint ep )
     }
 
     int optval = 1;
+    if ( -1 == setsockopt( s.fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof( optval ) ) )
+    {
+        __android_log_print( ANDROID_LOG_ERROR, TAG, "Could reuse addr for socket: %s:%d - %s", ep.ip.c_str(), ep.port, strerror( errno ) );
+    }
+
     if ( -1 == setsockopt( s.fd, SOL_SOCKET, SO_REUSEPORT, &optval, sizeof( optval ) ) )
     {
         __android_log_print( ANDROID_LOG_ERROR, TAG, "Could reuse port for socket: %s:%d - %s", ep.ip.c_str(), ep.port, strerror( errno ) );
